@@ -15,7 +15,7 @@ rm -f "$TIMING_FILE"
 for NUM_WORKERS in 2 4 6
 do
     echo "Création du cluster avec $NUM_WORKERS workers..."
-    gcloud dataproc clusters create "$JOB_NAME-cluster-$NUM_WORKERS" \
+    gcloud dataproc clusters create cluster-a35a \
         --enable-component-gateway \
         --region europe-west1 \
         --zone europe-west1-c \
@@ -33,7 +33,7 @@ do
     # Exécutez le job Pig
     echo "Exécution du job Pig sur un cluster avec $NUM_WORKERS workers..."
     START_TIME=$(date +%s)
-    gcloud dataproc jobs submit pyspark --region europe-west1 --cluster "$JOB_NAME-cluster-$NUM_WORKERS" gs://"$BUCKET_NAME"/"$SPARK_SCRIPT"  -- gs://"$BUCKET_NAME"/page_links_en.nt.bz2 3
+    gcloud dataproc jobs submit pyspark --region europe-west1 --cluster cluster-a35a gs://"$BUCKET_NAME"/"$SPARK_SCRIPT"  -- gs://"$BUCKET_NAME"/page_links_en.nt.bz2 3
     END_TIME=$(date +%s)
     ELAPSED_TIME=$((END_TIME - START_TIME))
 
@@ -42,5 +42,5 @@ do
 
     # Supprimez le cluster
     echo "Suppression du cluster avec $NUM_WORKERS workers..."
-    gcloud dataproc clusters delete "$JOB_NAME-cluster-$NUM_WORKERS" --region europe-west1
+    gcloud dataproc clusters delete cluster-a35a --region europe-west1
 done
